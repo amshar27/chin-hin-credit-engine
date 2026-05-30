@@ -119,6 +119,26 @@ Scoring is computed **100% client-side** — no API call, no LLM involvement:
 - Scores **update in real-time** as the officer edits any field in the form.
 - The AI's `score_breakdown` is intentionally **ignored** to eliminate hallucination from the final score.
 
+## A Note on the Scoring Matrices
+
+The exact Chin Hin credit-scoring matrices (the per-band point values and category
+weights) are **proprietary and have been excluded from this public repository** for
+confidentiality. The scoring *logic* and structure live in
+`credit-engine-ui/src/utils/scoreMapping.js`, but the lookup tables it references are
+not included.
+
+To run the engine end-to-end, supply your own matrices. Two CSVs are expected at the
+repo root:
+
+- `Credit Scoring Matrix(New Customer).csv`
+- `Credit Scoring Matrix(Existing Customer).csv`
+
+Each row follows the shape `Section, Attribute, Metric, Score (%)`, where the `Metric`
+strings must match the `Literal` band values defined in
+`app/models/credit_scoring_form.py`. The five scoring categories and their weights are
+documented in the **Deterministic Rules Engine** section above — you can use those as a
+guide to build a matrix that suits your own credit policy.
+
 #### 5-Category Scorecard (100 Points)
 
 | Category | New Customer | Existing Customer |
@@ -209,17 +229,13 @@ chin-hin-credit-engine/
 │           └── scoreMapping.js              # New/Existing customer matrices + calculateFinalScores()
 │
 ├── data/
-│   ├── matrices/                            # Credit scoring lookup tables
-│   ├── mock_erp/mock_erp_data.json          # Mock internal trade records
-│   └── sample_pdfs/                         # Sample CTOS test files
+│   └── mock_erp/mock_erp_data.json          # Mock internal trade records (synthetic)
+│   
 │
-├── Credit Scoring Matrix(New Customer).csv
-├── Credit Scoring Matrix(Existing Customer).csv
 ├── requirements.txt
 ├── .env.example                             # Copy to .env and fill in values
 ├── README.md
-├── TECH_STACK.md
-└── PRESENTATION_CHEATSHEET.md
+└── TECH_STACK.md
 ```
 
 ---
