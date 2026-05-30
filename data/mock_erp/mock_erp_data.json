@@ -1,0 +1,22 @@
+[
+  {
+    "company_name": "CDE CONSTRUCTION SDN BHD",
+    "reg_no_keywords": "123456",
+    "internal_data": {
+      "status": "Existing Customer",
+      "payment_conduct": "Prompt",
+      "existing_group_exposure": 150000.00,
+      "relationship_years": 4
+    }
+  },
+  {
+    "company_name": "ABC SDN BHD",
+    "reg_no_keywords": "987654",
+    "internal_data": {
+      "status": "Existing Customer",
+      "payment_conduct": "Slow",
+      "existing_group_exposure": 45000.00,
+      "relationship_years": 2
+    }
+  }
+]

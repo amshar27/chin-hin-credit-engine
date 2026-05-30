@@ -1,0 +1,959 @@
+/* =============================================================================
+   CtosDetailedExtraction.css
+   Professional, read-only accordion for banking / credit officer dashboards.
+   No Tailwind. All layout via standard CSS Grid + Flexbox.
+   ============================================================================= */
+
+/* ── Design tokens (local scope) ─────────────────────────────────────────── */
+.ctos-accordion {
+  --ctos-navy:        #1a3a5c;
+  --ctos-blue:        #2563eb;
+  --ctos-border:      #e2e8f0;
+  --ctos-border-soft: #f1f5f9;
+  --ctos-bg-header:   #f8fafc;
+  --ctos-bg-hover:    #f0f4f8;
+  --ctos-bg-open:     #eef3fa;
+  --ctos-text-primary: #0f172a;
+  --ctos-text-label:   #64748b;
+  --ctos-text-null:    #cbd5e1;
+  --ctos-mono:         'SF Mono', 'Fira Code', 'Consolas', monospace;
+  --ctos-radius:       10px;
+  --ctos-radius-sm:    6px;
+  --ctos-shadow:       0 1px 3px rgba(0, 0, 0, 0.07), 0 4px 16px rgba(0, 0, 0, 0.05);
+
+  border: 1px solid var(--ctos-border);
+  border-radius: var(--ctos-radius);
+  background: #ffffff;
+  box-shadow: var(--ctos-shadow);
+  overflow: hidden;
+}
+
+/* =============================================================================
+   ACCORDION TRIGGER
+   ============================================================================= */
+
+.ctos-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: var(--ctos-bg-header);
+  border: none;
+  border-bottom: 1px solid var(--ctos-border);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+  /* Remove default button outline; re-add for keyboard users */
+  outline: none;
+}
+
+.ctos-trigger:focus-visible {
+  outline: 2px solid var(--ctos-blue);
+  outline-offset: -2px;
+}
+
+.ctos-trigger:hover {
+  background: var(--ctos-bg-hover);
+}
+
+.ctos-trigger:active {
+  background: #dce8f5;
+}
+
+.ctos-trigger--open {
+  background: var(--ctos-bg-open);
+  border-bottom-color: #bfdbfe;
+}
+
+/* Left cluster: icon + text */
+.ctos-trigger-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.ctos-trigger-icon {
+  color: var(--ctos-blue);
+  flex-shrink: 0;
+}
+
+.ctos-trigger-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.ctos-trigger-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ctos-text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.ctos-trigger-sub {
+  font-size: 0.74rem;
+  color: var(--ctos-text-label);
+  line-height: 1.3;
+}
+
+/* Right cluster: badge + chevron */
+.ctos-trigger-right {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+
+.ctos-trigger-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ctos-blue);
+  background: #dbeafe;
+  border: 1px solid #bfdbfe;
+  padding: 0.2rem 0.6rem;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+
+/* Animated chevron — rotates 180° when open */
+.ctos-chevron {
+  color: #475569;
+  flex-shrink: 0;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ctos-chevron--open {
+  transform: rotate(180deg);
+}
+
+/* =============================================================================
+   ACCORDION BODY — smooth height animation via CSS grid trick
+   grid-template-rows: 0fr → 1fr animates height without JS measurement
+   ============================================================================= */
+
+.ctos-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ctos-body--open {
+  grid-template-rows: 1fr;
+}
+
+/* Inner wrapper: must have overflow:hidden for the grid trick to clip content */
+.ctos-body-inner {
+  overflow: hidden;
+  /* Fade in after height expansion */
+  opacity: 0;
+  transition: opacity 0.22s ease 0s;
+}
+
+.ctos-body--open .ctos-body-inner {
+  opacity: 1;
+  transition: opacity 0.25s ease 0.18s; /* slight delay = waits for height to open */
+}
+
+/* =============================================================================
+   SECTIONS LIST
+   ============================================================================= */
+
+.ctos-sections {
+  padding: 1.25rem 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+/* =============================================================================
+   EMPTY STATE
+   ============================================================================= */
+
+.ctos-empty {
+  padding: 2.5rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ctos-empty-icon {
+  color: #cbd5e1;
+  margin-bottom: 0.25rem;
+}
+
+.ctos-empty-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.ctos-empty-sub {
+  font-size: 0.8rem;
+  color: #b0bec5;
+  max-width: 380px;
+  line-height: 1.5;
+}
+
+.ctos-empty-sub code {
+  font-family: var(--ctos-mono);
+  font-size: 0.78rem;
+  background: #f1f5f9;
+  padding: 0.05rem 0.3rem;
+  border-radius: 3px;
+  color: #475569;
+}
+
+/* =============================================================================
+   SECTION CARD
+   ============================================================================= */
+
+.ctos-section {
+  border: 1px solid var(--ctos-border);
+  border-radius: var(--ctos-radius-sm);
+  overflow: hidden;
+  background: #ffffff;
+  /* Subtle entrance — sections already visible when body fades in */
+}
+
+/* ── Section Header ────────────────────────────────────────────────────────── */
+
+.ctos-section-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0.875rem;
+  background: var(--ctos-bg-header);
+  border-bottom: 1px solid var(--ctos-border-soft);
+}
+
+.ctos-section-hd-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+/* Section number badge */
+.ctos-section-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--ctos-navy);
+  color: #ffffff;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.ctos-section-icon {
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.ctos-section-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ctos-navy);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Section Score Badge (in header) ─────────────────────────────────────── */
+
+.ctos-section-score {
+  display: flex;
+  align-items: baseline;
+  gap: 0.15rem;
+  padding: 0.18rem 0.6rem 0.22rem;
+  border-radius: 99px;
+  border: 1px solid;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  /* Subtle fill bar behind the text */
+}
+
+/* Animated fill bar using CSS custom properties set inline */
+.ctos-section-score::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--clr, #94a3b8);
+  opacity: 0.08;
+  width: var(--fill, 0%);
+  border-radius: inherit;
+  transition: width 0.6s ease;
+}
+
+.ctos-section-score-lbl {
+  font-size: 0.58rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+  margin-right: 0.2rem;
+  position: relative; /* above the ::before fill */
+}
+
+.ctos-section-score-val {
+  font-size: 0.9rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  position: relative;
+}
+
+.ctos-section-score-max {
+  font-size: 0.6rem;
+  font-weight: 500;
+  opacity: 0.55;
+  position: relative;
+}
+
+/* =============================================================================
+   FIELDS GRID
+   Grid gap = 1px with a contrasting grid background creates crisp divider lines.
+   ============================================================================= */
+
+.ctos-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--ctos-border-soft); /* gap colour = divider line colour */
+}
+
+/* ── Field Cell ────────────────────────────────────────────────────────────── */
+
+.ctos-field {
+  background: #ffffff;
+  padding: 0.55rem 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+  min-width: 0; /* prevent grid overflow */
+}
+
+/* Single-item rows span both columns */
+.ctos-field--full {
+  grid-column: 1 / -1;
+}
+
+/* ── Field Label ───────────────────────────────────────────────────────────── */
+
+.ctos-field-label {
+  font-size: 0.635rem;
+  font-weight: 700;
+  color: var(--ctos-text-label);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+/* ── Field Value (base) ────────────────────────────────────────────────────── */
+
+.ctos-field-value {
+  /* Wrapper so we can align diverse value types consistently */
+  display: flex;
+  align-items: center;
+  min-height: 1.6rem;
+}
+
+.ctos-val {
+  font-size: 0.86rem;
+  color: var(--ctos-text-primary);
+  line-height: 1.4;
+  word-break: break-word;
+  font-weight: 500;
+}
+
+/* Null placeholder */
+.ctos-val--null {
+  color: var(--ctos-text-null);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+
+/* Currency */
+.ctos-val--currency {
+  font-family: var(--ctos-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #1e40af;
+}
+
+.ctos-val--neg {
+  color: #b91c1c !important;
+}
+
+/* Percentage / Ratio (monospace, subdued) */
+.ctos-val--mono {
+  font-family: var(--ctos-mono);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* =============================================================================
+   SCORE DISPLAY  (fmt: 'score')
+   Score chip + mini horizontal bar below
+   ============================================================================= */
+
+.ctos-score-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.ctos-score-chip {
+  display: inline-block;
+  font-size: 1.05rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  padding: 0.06rem 0.4rem;
+  border-radius: 4px;
+  border: 1px solid;
+  width: fit-content;
+  line-height: 1.3;
+  /* color, background, borderColor set inline via scoreTheme() */
+}
+
+.ctos-score-bar {
+  height: 3px;
+  background: #e2e8f0;
+  border-radius: 99px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 72px;
+}
+
+.ctos-score-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  /* background set inline via scoreTheme() */
+}
+
+/* =============================================================================
+   YES / NO BADGE  (fmt: 'yesno')
+   ============================================================================= */
+
+.ctos-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.14rem 0.55rem;
+  border-radius: 99px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  line-height: 1.4;
+}
+
+.ctos-badge--yes {
+  color: #15803d;
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.ctos-badge--no {
+  color: #b91c1c;
+  background: #fef2f2;
+  border-color: #fca5a5;
+}
+
+/* =============================================================================
+   SECTION SCORE BAR (hidden DOM element for CSS var approach)
+   We use ::before on .ctos-section-score with CSS vars set inline.
+   The .ctos-section-score-bar div is kept for legacy safety but hidden.
+   ============================================================================= */
+
+.ctos-section-score-bar {
+  display: none;
+}
+
+/* =============================================================================
+   RESPONSIVE
+   Stack to single column on narrow viewports
+   ============================================================================= */
+
+@media (max-width: 580px) {
+  .ctos-sections {
+    padding: 0.875rem 0.75rem 1.125rem;
+    gap: 0.75rem;
+  }
+
+  .ctos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* On mobile, "full" is just a regular cell since there's only 1 column */
+  .ctos-field--full {
+    grid-column: 1;
+  }
+
+  .ctos-section-title {
+    font-size: 0.68rem;
+  }
+
+  .ctos-trigger {
+    padding: 0.875rem 1rem;
+  }
+
+  .ctos-trigger-badge {
+    display: none; /* too cramped on mobile */
+  }
+}
+
+@media (max-width: 400px) {
+  .ctos-section-hd {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+}
+
+/* =============================================================================
+   EDITABLE FIELD STATES
+   ============================================================================= */
+
+/* Editable field — pointer + hover highlight */
+.ctos-field--editable {
+  cursor: pointer;
+  transition: background 0.12s ease;
+  position: relative;
+}
+
+.ctos-field--editable:hover,
+.ctos-field--editable:focus-within {
+  background: #f0f7ff;
+}
+
+/* Only show ring for keyboard navigation, not mouse clicks */
+.ctos-field--editable:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
+}
+
+/* Empty / null field — invites input */
+.ctos-field--empty.ctos-field--editable:hover {
+  background: #eff6ff;
+}
+
+.ctos-field--empty .ctos-val--null {
+  color: #93c5fd;
+}
+
+/* Modified field — light blue tint to indicate officer edit */
+.ctos-field--modified {
+  background: #f0f9ff !important;
+  border-left: 2px solid #2563eb;
+}
+
+/* Modified dot shown next to the label */
+.ctos-modified-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2563eb;
+  margin-left: 5px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+/* Pencil hint — visible only on hover */
+.ctos-edit-hint {
+  display: none;
+  align-items: center;
+  color: #93c5fd;
+  margin-left: 0.4rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.ctos-field--editable:hover .ctos-edit-hint {
+  display: flex;
+}
+
+/* =============================================================================
+   INLINE EDIT MODE
+   ============================================================================= */
+
+.ctos-field--editing {
+  background: #eff6ff;
+  padding: 0.45rem 0.875rem;
+}
+
+.ctos-field-edit-input {
+  width: 100%;
+  height: 30px;
+  padding: 0 0.55rem;
+  border: 1.5px solid #2563eb;
+  border-radius: 4px;
+  font-size: 0.84rem;
+  color: #0f172a;
+  background: #ffffff;
+  outline: none;
+  font-family: inherit;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  transition: border-color 0.12s;
+}
+
+.ctos-field-edit-input:focus {
+  border-color: #1d4ed8;
+}
+
+.ctos-field-edit-select {
+  width: 100%;
+  height: 30px;
+  padding: 0 0.55rem;
+  border: 1.5px solid #2563eb;
+  border-radius: 4px;
+  font-size: 0.84rem;
+  color: #0f172a;
+  background: #ffffff;
+  outline: none;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  transition: border-color 0.12s, box-shadow 0.12s;
+}
+
+.ctos-field-edit-select:focus {
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+}
+
+/* =============================================================================
+   EDIT NOTICE BANNER
+   ============================================================================= */
+
+.ctos-edit-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.55rem 0.875rem;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  font-size: 0.74rem;
+  color: #1d4ed8;
+  line-height: 1.5;
+}
+
+.ctos-edit-notice svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* =============================================================================
+   MODIFIED COUNT BADGE VARIANT
+   ============================================================================= */
+
+.ctos-trigger-badge--modified {
+  color: #1d4ed8;
+  background: #dbeafe;
+  border-color: #93c5fd;
+}
+
+/* =============================================================================
+   UPDATE AI CREDIT DECISION BAR
+   ============================================================================= */
+
+.ctos-recalc-bar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.875rem 1rem;
+  margin-top: 0.5rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.ctos-recalc-feedback {
+  flex: 1;
+  min-width: 0;
+}
+
+.ctos-recalc-msg {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.815rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.ctos-recalc-msg--success {
+  color: #15803d;
+}
+
+.ctos-recalc-msg--error {
+  color: #b91c1c;
+}
+
+.ctos-recalc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  height: 38px;
+  padding: 0 1.1rem;
+  background: #1e293b;
+  color: #f8fafc;
+  border: none;
+  border-radius: 7px;
+  font-size: 0.855rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.14s, box-shadow 0.14s, transform 0.1s;
+  flex-shrink: 0;
+}
+
+.ctos-recalc-btn:hover:not(:disabled) {
+  background: #0f172a;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.22);
+}
+
+.ctos-recalc-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.ctos-recalc-btn:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+.ctos-recalc-btn:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* Highlighted state when there are unsaved edits */
+.ctos-recalc-btn--highlight {
+  background: #2563eb;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.3);
+}
+
+.ctos-recalc-btn--highlight:hover:not(:disabled) {
+  background: #1d4ed8;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.38);
+}
+
+/* Small badge showing number of pending changes */
+.ctos-recalc-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 18px;
+  padding: 0 0.45rem;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 99px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  margin-left: 0.15rem;
+}
+
+/* ── AI Suggested badge — appears on auto-filled fields ──────────────────── */
+.ctos-ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 3px;
+  padding: 2px 7px;
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  border-radius: 9999px;
+  font-size: 0.67rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  width: fit-content;
+  pointer-events: none; /* tooltip is on the parent cell */
+}
+
+/* ── Recalculate button group ───────────────────────────────────────────── */
+/* Wrapper that stacks the button above the hint text */
+.ctos-recalc-btn-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+/* Small helper text beneath the button */
+.ctos-recalc-hint {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  text-align: right;
+  line-height: 1.35;
+  max-width: 320px;
+}
+
+@media (max-width: 480px) {
+  .ctos-recalc-bar { justify-content: center; }
+  .ctos-recalc-btn-group { align-items: center; width: 100%; }
+  .ctos-recalc-btn { width: 100%; justify-content: center; }
+  .ctos-recalc-hint { text-align: center; max-width: none; }
+}
+
+/* =============================================================================
+   RIGHT-ALIGNED SCORE  (replaces the old Points Pill)
+   When a data field has a paired score field, the outer cell uses a
+   flex-row space-between layout: left = label + value, right = score info.
+   ============================================================================= */
+
+/* Override the default column layout for cells that carry a paired score */
+.ctos-field--has-score {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Left grouping: label stacked above value/input, fills remaining width */
+.ctos-field-left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.22rem;
+}
+
+/* Right grouping: score label (bold) + score value, aligned right */
+.ctos-score-right {
+  flex-shrink: 0;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.ctos-score-right-label {
+  font-size: 0.635rem;
+  font-weight: 700;
+  color: var(--ctos-text-label);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.ctos-score-right-value {
+  font-size: 0.9rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--ctos-text-primary);
+  margin-left: 20px;
+}
+
+/* =============================================================================
+   RADIO BUTTONS  (fmt: radio in FIELD_INPUT_CONFIG)
+   ============================================================================= */
+
+/* Outer flex row: options cluster + optional pts badge */
+.ctos-field-radio-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 1.6rem;
+  flex-wrap: wrap;
+}
+
+/* The cluster of individual radio options */
+.ctos-radio-options {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  flex: 1;
+}
+
+/* Each label wraps the <input type="radio"> + text */
+.ctos-radio-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: #0f172a;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.ctos-radio-label:hover {
+  color: #2563eb;
+}
+
+.ctos-radio-input {
+  width: 15px;
+  height: 15px;
+  accent-color: #2563eb;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* =============================================================================
+   CHECKBOXES  (type: 'checkbox' in FIELD_INPUT_CONFIG)
+   ============================================================================= */
+
+/* Wrapping flex grid of checkbox+label pairs */
+.ctos-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.25rem;
+  padding: 0.15rem 0;
+  outline: none; /* tabIndex=-1 for blur detection; no visible outline needed */
+}
+
+.ctos-checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: #0f172a;
+  cursor: pointer;
+  user-select: none;
+}
+
+.ctos-checkbox-label:hover {
+  color: #2563eb;
+}
+
+.ctos-checkbox-input {
+  width: 15px;
+  height: 15px;
+  accent-color: #2563eb;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+

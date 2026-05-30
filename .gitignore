@@ -1,0 +1,117 @@
+# =============================================================================
+# Chin Hin Autonomous Credit Scoring Engine — .gitignore
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# CRITICAL — Environment & Secrets  (NEVER commit real credentials)
+# ---------------------------------------------------------------------------
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+.env.*.local
+*.env
+
+# Azure Developer CLI state
+.azure/
+
+# ---------------------------------------------------------------------------
+# CRITICAL — Sensitive Documents  (CTOS reports, bank statements, test PDFs)
+# ---------------------------------------------------------------------------
+*.pdf
+*.PDF
+/sample_documents/
+/test_data/
+/test_pdfs/
+/data/sample_pdfs/
+/data/raw/
+/uploads/
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+ENV/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+.eggs/
+
+# Testing & coverage
+.pytest_cache/
+.coverage
+htmlcov/
+*.lcov
+.tox/
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# ---------------------------------------------------------------------------
+# Node / React / Vite
+# ---------------------------------------------------------------------------
+node_modules/
+credit-engine-ui/node_modules/
+credit-engine-ui/dist/
+credit-engine-ui/build/
+credit-engine-ui/.vite/
+
+# Caches
+.eslintcache
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---------------------------------------------------------------------------
+# OS & Editor artefacts
+# ---------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+Desktop.ini
+
+.idea/
+.vscode/settings.json
+.vscode/*.code-workspace
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# ---------------------------------------------------------------------------
+# Misc
+# ---------------------------------------------------------------------------
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+
+# AI handoff file
+CLAUDE.md
+FINALIST_COMPREHENSIVE_CHEAT_SHEET.md
+PRESENTATION_CHEATSHEET.md
+Credit Scoring Matrix(Existing Customer).csv
+Credit Scoring Matrix(New Customer).csv

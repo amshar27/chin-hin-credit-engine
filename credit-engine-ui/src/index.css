@@ -1,0 +1,29 @@
+/*
+ * index.css — global entry point
+ *
+ * This file intentionally contains only the bare minimum that Vite/browser
+ * normalisation requires. All application styles live in App.css so they
+ * can be reasoned about in one place.
+ *
+ * Removed Vite boilerplate:
+ *   - body { display:flex; place-items:center } — was shrinking #root to
+ *     content width and left-aligning it, breaking the full-width header.
+ *   - :root dark-mode colours (background:#242424, color:rgba(255,255,255,.87))
+ *     — conflicted with the light theme defined in App.css.
+ *   - button / h1 / a resets — overridden by App.css component styles.
+ *   - color-scheme: light dark — was toggling dark mode on some OS settings.
+ */
+
+/* Font-smoothing: keep the text crisp on all platforms. */
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure the Vite mount point never constrains the layout. */
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
