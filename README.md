@@ -1,5 +1,13 @@
 # Intelligent Credit Assessment Copilot
 
+![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
+![Azure AI Foundry](https://img.shields.io/badge/Azure_AI_Foundry-0078D4?logo=microsoftazure&logoColor=white)
+![Azure OpenAI](https://img.shields.io/badge/Azure_OpenAI-GPT--4o-412991?logo=openai&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-18%2B-339933?logo=nodedotjs&logoColor=white)
+
 > **A hybrid AI + Deterministic Rules Engine that automates B2B credit scoring for Chin Hin Group.**
 >
 > Ingests CTOS reports and bank statements, extracts structured data via a multi-agent LLM pipeline, calculates scores against a 100% deterministic matrix, and surfaces a Human-in-the-Loop dashboard with an integrated **AI Data Copilot** so Credit Officers retain full, auditable control.
